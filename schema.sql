@@ -16,5 +16,5 @@ CREATE TABLE departments (
  department_id INT NOT NULL AUTO_INCREMENT,
  department_name VARCHAR(200),
  over_head_costs DECIMAL(10, 2),
- PRIMARY_KEY (department_id) 
+ PRIMARY KEY (department_id) 
 );

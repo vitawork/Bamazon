@@ -11,7 +11,7 @@ connection.connect(function(err) {
 
 function ShowProducts() {
   connection.query(
-    "SELECT item_id, product_name, price, stock_quantity FROM `bamazon`.`products`  HAVING stock_quantity > 0",
+    "SELECT item_id, product_name AS Product, price AS Price, stock_quantity As Stock FROM `bamazon`.`products`  HAVING stock_quantity > 0",
     function(err, res) {
       if (err) throw err;
 
@@ -81,7 +81,7 @@ function Purchase(id, res, units) {
     [
       {
         stock_quantity: res[0].stock_quantity - units,
-        product_sales: res[0].product_sales + (res[0].price * units)
+        product_sales: res[0].product_sales + res[0].price * units
       },
       {
         item_id: id

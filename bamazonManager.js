@@ -50,7 +50,7 @@ function runSearch() {
 
 function ViewProducts() {
   connection.query(
-    "SELECT item_id, product_name, price, stock_quantity, product_sales FROM `bamazon`.`products`",
+    "SELECT item_id, product_name AS Product, price AS Price, stock_quantity AS Stock, product_sales As Sales FROM `bamazon`.`products`",
     function(err, res) {
       if (err) throw err;
 
@@ -67,7 +67,7 @@ function ViewProducts() {
 
 function LowInventory() {
   connection.query(
-    "SELECT * FROM bamazon.products  HAVING stock_quantity < 5",
+    "SELECT item_id, product_name AS Product, price AS Price, stock_quantity AS Stock, department_name AS Department, product_sales As Sales FROM bamazon.products  HAVING stock_quantity < 5",
     function(err, res) {
       if (err) throw err;
 
@@ -83,64 +83,67 @@ function LowInventory() {
 }
 
 function AddInventory() {
-  connection.query("SELECT * FROM `bamazon`.`products`", function(err, res) {
-    if (err) throw err;
+  connection.query(
+    "SELECT item_id, product_name AS Product, price AS Price, stock_quantity AS Stock, department_name AS Department, product_sales As Sales  FROM `bamazon`.`products`",
+    function(err, res) {
+      if (err) throw err;
 
-    const transformed = res.reduce((acc, { item_id, ...x }) => {
-      acc[item_id] = x;
-      return acc;
-    }, {});
-    console.table(transformed);
+      const transformed = res.reduce((acc, { item_id, ...x }) => {
+        acc[item_id] = x;
+        return acc;
+      }, {});
+      console.table(transformed);
 
-    inquirer
-      .prompt({
-        name: "product_id",
-        type: "input",
-        message: "Please enter the index of the product."
-      })
-      .then(function(answer) {
-        let found = false;
-        let prod;
-        for (let a in res) {
-          if (res[a].item_id == answer.product_id) {
-            found = true;
-            prod = res[a];
+      inquirer
+        .prompt({
+          name: "product_id",
+          type: "input",
+          message: "Please enter the index of the product."
+        })
+        .then(function(answer) {
+          let found = false;
+          let prod;
+          for (let a in res) {
+            if (res[a].item_id == answer.product_id) {
+              found = true;
+              prod = res[a];
+            }
           }
-        }
 
-        if (!found) {
-          console.log("---------------------------");
-          console.log("---The Id was not found.---");
-          console.log("---------------------------");
-          runSearch();
-        } else {
-          inquirer
-            .prompt({
-              name: "units",
-              type: "input",
-              message: "How many units you going to add."
-            })
-            .then(function(answer) {
-              connection.query(
-                "UPDATE products SET ? WHERE ?",
-                [
-                  {
-                    stock_quantity: prod.stock_quantity + parseInt(answer.units)
-                  },
-                  { item_id: prod.item_id }
-                ],
-                function(err, res2) {
-                  if (err) throw err;
-                  console.log("----------------------------------");
-                  console.log("---The new inventory was added.---");
-                  console.log("----------------------------------");
-                  runSearch();
-                }
-              );
-            });
-        }
-      });
-  });
+          if (!found) {
+            console.log("---------------------------");
+            console.log("---The Id was not found.---");
+            console.log("---------------------------");
+            runSearch();
+          } else {
+            inquirer
+              .prompt({
+                name: "units",
+                type: "input",
+                message: "How many units you going to add."
+              })
+              .then(function(answer) {
+                connection.query(
+                  "UPDATE products SET ? WHERE ?",
+                  [
+                    {
+                      stock_quantity: prod.Stock + parseInt(answer.units)
+                    },
+                    { item_id: prod.item_id }
+                  ],
+                  function(err, res2) {
+                    if (err) throw err;
+                    console.log("----------------------------------");
+                    console.log("---The new inventory was added.---");
+                    console.log("----------------------------------");
+                    runSearch();
+                  }
+                );
+              });
+          }
+        });
+    }
+  );
 }
 
 function AddNewProduct() {
