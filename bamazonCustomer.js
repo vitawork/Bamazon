@@ -11,7 +11,7 @@ connection.connect(function(err) {
 
 function ShowProducts() {
   connection.query(
-    "SELECT item_id, product_name, price FROM `bamazon`.`products`",
+    "SELECT item_id, product_name, price, stock_quantity FROM `bamazon`.`products`  HAVING stock_quantity > 0",
     function(err, res) {
       if (err) throw err;
 
@@ -55,7 +55,7 @@ function AskingProductToUser(res) {
           })
           .then(function(answer) {
             connection.query(
-              "SELECT product_name, stock_quantity, price FROM `bamazon`.`products` WHERE ?",
+              "SELECT product_name, stock_quantity, price, product_sales FROM `bamazon`.`products` WHERE ?",
               { item_id: id },
               function(err, res2) {
                 if (err) throw err;
@@ -76,36 +76,22 @@ function AskingProductToUser(res) {
 }
 
 function Purchase(id, res, units) {
-  if (res[0].stock_quantity - units === 0) {
-    connection.query(
-      "DELETE FROM `bamazon`.`products` WHERE ?",
-      [
-        {
-          item_id: id
-        }
-      ],
-      function(err, res3) {
-        if (err) throw err;
-        Receipt(res, units);
+  connection.query(
+    "UPDATE `bamazon`.`products` SET ? WHERE ?",
+    [
+      {
+        stock_quantity: res[0].stock_quantity - units,
+        product_sales: res[0].product_sales + (res[0].price * units)
+      },
+      {
+        item_id: id
       }
-    );
-  } else {
-    connection.query(
-      "UPDATE `bamazon`.`products` SET ? WHERE ?",
-      [
-        {
-          stock_quantity: res[0].stock_quantity - units
-        },
-        {
-          item_id: id
-        }
-      ],
-      function(err, res3) {
-        if (err) throw err;
-        Receipt(res, units);
-      }
-    );
-  }
+    ],
+    function(err, res3) {
+      if (err) throw err;
+      Receipt(res, units);
+    }
+  );
 }
 
 function Receipt(res, units) {

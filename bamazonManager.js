@@ -50,7 +50,7 @@ function runSearch() {
 
 function ViewProducts() {
   connection.query(
-    "SELECT item_id, product_name, price, stock_quantity FROM `bamazon`.`products`",
+    "SELECT item_id, product_name, price, stock_quantity, product_sales FROM `bamazon`.`products`",
     function(err, res) {
       if (err) throw err;
 
@@ -180,7 +180,8 @@ function AddNewProduct() {
             product_name: answer.name,
             department_name: answer.department,
             price: answer.price,
-            stock_quantity: answer.quantity
+            stock_quantity: answer.quantity,
+            product_sales: 0
           },
           function(err, res2) {
             if (err) throw err;
