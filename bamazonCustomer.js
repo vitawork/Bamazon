@@ -110,9 +110,12 @@ function Purchase(id, res, units) {
 
 function Receipt(res, units) {
   console.log(
-    `Receipt:\n   ${units} X ${res[0].product_name}  $${
+    `---------------------------------------\nReceipt:\n   ${units} X ${
+      res[0].product_name
+    }  $${
       res[0].price
-    }\n----------------------------------\n   Total: $${res[0].price * units}`
+    }\n---------------------------------------\n   Total: $${res[0].price *
+      units}\n---------------------------------------`
   );
   ComandOrExit();
 }

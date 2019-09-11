@@ -37,7 +37,8 @@ function runSearch() {
           AddInventory();
           break;
 
-        case "Search for a specific song":
+        case "Add New Product":
+          AddNewProduct();
           break;
 
         case "Exit":
@@ -108,7 +109,9 @@ function AddInventory() {
         }
 
         if (!found) {
+          console.log("---------------------------");
           console.log("---The Id was not found.---");
+          console.log("---------------------------");
           runSearch();
         } else {
           inquirer
@@ -128,6 +131,9 @@ function AddInventory() {
                 ],
                 function(err, res2) {
                   if (err) throw err;
+                  console.log("----------------------------------");
+                  console.log("---The new inventory was added.---");
+                  console.log("----------------------------------");
                   runSearch();
                 }
               );
@@ -135,4 +141,55 @@ function AddInventory() {
         }
       });
   });
+}
+
+function AddNewProduct() {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        type: "input",
+        message: "Enter the product name."
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "Enter the product department."
+      },
+      {
+        name: "price",
+        type: "input",
+        message: "Enter the product price."
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "Enter the product quantity."
+      }
+    ])
+    .then(function(answer) {
+      if (isNaN(answer.price) || isNaN(answer.quantity)) {
+        console.log("-----------------------------");
+        console.log("---You enter a wrong value---");
+        console.log("-----------------------------");
+        runSearch();
+      } else {
+        connection.query(
+          "INSERT INTO products SET ?",
+          {
+            product_name: answer.name,
+            department_name: answer.department,
+            price: answer.price,
+            stock_quantity: answer.quantity
+          },
+          function(err, res2) {
+            if (err) throw err;
+            console.log("--------------------------------");
+            console.log("---The new product was added.---");
+            console.log("--------------------------------");
+            runSearch();
+          }
+        );
+      }
+    });
 }
