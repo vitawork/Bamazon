@@ -84,9 +84,9 @@ function AddDepartment() {
           },
           function(err, res2) {
             if (err) throw err;
-            console.log("--------------------------------");
+            console.log("-----------------------------------");
             console.log("---The new department was added.---");
-            console.log("--------------------------------");
+            console.log("-----------------------------------");
             runSearch();
           }
         );
