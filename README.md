@@ -19,3 +19,5 @@ Then they going to be prompted.
 
 
 ## bamazonManager.js
+
+## bamazonSupervisor.js
