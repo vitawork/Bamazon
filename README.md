@@ -33,15 +33,15 @@ The manager going to be prompted ones he runs the app and after each operation.
     
   * View Low Inventory
 
-   ![Image of menu](6.png)
+    ![Image of menu](6.png)
     
   * Add to Inventory
 
-   ![Image of menu](7.png)
+    ![Image of menu](7.png)
     
   * Add New Product
 
-   ![Image of menu](8.png)
+    ![Image of menu](8.png)
 
 ## bamazonSupervisor.js
 
@@ -51,8 +51,8 @@ The supervisor going to be prompted ones he runs the app and after each operatio
 
   * View Product Sales by Department
 
-   ![Image of menu](10.png)
+    ![Image of menu](10.png)
    
   * Create New Department
 
-   ![Image of menu](11.png)
+    ![Image of menu](11.png)
